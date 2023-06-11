@@ -132,6 +132,77 @@ double GameForm::minMaxAlphaBeta(std::vector<std::vector<uint8_t>> *currBoard, P
 
 double GameForm::calcHeuristic(std::vector<std::vector<uint8_t>> *currBoard, Player *player)
 {
+	double mobility = 0, coinParity = 0, cornersCaptured = 0;
+	double maxCount = 0, minCount = 0;
+
+	uint8_t maxCellColor, minCellColor;
+	if (player->color == "Black")
+	{
+		maxCellColor = BOARD_BLACK;
+		minCellColor = BOARD_WHITE;
+	}
+	else
+	{
+		maxCellColor = BOARD_WHITE;
+		minCellColor = BOARD_BLACK;
+	}
+
+	for (int i = 0; i < BOARD_SIZE; i++)
+	{
+		for (int j = 0; j < BOARD_SIZE; j++)
+		{
+			if (currBoard->at(i)[j] == maxCellColor)
+			{
+				maxCount++;
+			}
+			else if (currBoard->at(i)[j] == minCellColor)
+			{
+				minCount++;
+			}
+		}
+	}
+	coinParity = (100 * (maxCount - minCount)) / (maxCount + minCount);
+
+	maxCount = minCount = 0;
+
+	if (currBoard->at(0)[0] == maxCellColor)
+		maxCount++;
+	else if (currBoard->at(0)[0] == minCount)
+		minCount++;
+	if (currBoard->at(0)[7] == maxCellColor)
+		maxCount++;
+	else if (currBoard->at(0)[7] == minCount)
+		minCount++;
+	if (currBoard->at(7)[0] == maxCellColor)
+		maxCount++;
+	else if (currBoard->at(7)[0] == minCount)
+		minCount++;
+	if (currBoard->at(7)[7] == maxCellColor)
+		maxCount++;
+	else if (currBoard->at(7)[7] == minCount)
+		minCount++;
+
+	if (maxCount + minCount != 0)
+	{
+		cornersCaptured = (100 * (maxCount - minCount)) / (maxCount + minCount);
+	}
+
+	Player *opponent;
+
+	if (player == player1)
+		opponent = player2;
+	else
+		opponent = player1;
+
+	maxCount = calcLegalMoves(currBoard, player);
+	minCount = calcLegalMoves(currBoard, opponent);
+
+	if (maxCount + minCount != 0)
+	{
+		mobility = (100 * (maxCount - minCount)) / (maxCount + minCount);
+	}
+
+	return (mobility + coinParity + cornersCaptured);
 }
 
 /* Event Handlers */
