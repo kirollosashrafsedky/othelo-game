@@ -200,8 +200,198 @@ System::Void GameForm::placeAndFlip(std::vector<std::vector<uint8_t>> *currBoard
 {
 }
 
-uint8_t GameForm::calcLegalMoves(std::vector<std::vector<uint8_t>> *currBoard, Player *player)
+uint8_t GameForm::calcLegalMoves(std::vector<std::vector<uint8_t>>* currBoard, Player* player)
 {
+	for (int i = 0; i < BOARD_SIZE; i++)
+	{
+		for (int j = 0; j < BOARD_SIZE; j++)
+		{
+			if (currBoard->at(i)[j] == BOARD_EMPTY_LEGAL)
+			{
+				currBoard->at(i)[j] = BOARD_EMPTY;
+			}
+		}
+	}
+
+	uint8_t currentColor = (player == player1) ? BOARD_BLACK : BOARD_WHITE;
+	uint8_t moves = 0;
+
+	for (int row = 0; row < BOARD_SIZE; row++)
+	{
+		for (int col = 0; col < BOARD_SIZE; col++)
+		{
+			uint8_t currentMoves = moves;
+
+			if (currBoard->at(row)[col] != BOARD_EMPTY)
+				continue;
+
+			// move right
+			for (int i = col + 1; i < BOARD_SIZE; i++) {
+				if (currBoard->at(row)[i] == currentColor) {
+					if (i - col > 1)
+					{ 
+						currBoard->at(row)[col] = BOARD_EMPTY_LEGAL;
+						moves++;
+						break;
+					}
+					else
+						break;
+				}
+				else if (currBoard->at(row)[i] == BOARD_EMPTY || currBoard->at(row)[i] == BOARD_EMPTY_LEGAL)
+					break;
+			}
+
+			if (moves > currentMoves)
+				continue;
+
+			// move left
+			for (int i = col - 1; i >= 0; i--) {
+				if (currBoard->at(row)[i] == currentColor) {
+					if (col - i > 1)
+					{
+						currBoard->at(row)[col] = BOARD_EMPTY_LEGAL;
+						moves++;
+						break;
+					}
+					else
+						break;
+				}
+				else if (currBoard->at(row)[i] == BOARD_EMPTY || currBoard->at(row)[i] == BOARD_EMPTY_LEGAL)
+					break;
+			}
+
+			if (moves > currentMoves)
+				continue;
+
+			// move down
+			for (int i = row + 1; i < BOARD_SIZE; i++) {
+				if (currBoard->at(i)[col] == currentColor) {
+					if (i - row > 1)
+					{
+						currBoard->at(row)[col] = BOARD_EMPTY_LEGAL;
+						moves++;
+						break;
+					}
+					else
+						break;
+				}
+				else if (currBoard->at(i)[col] == BOARD_EMPTY || currBoard->at(i)[col] == BOARD_EMPTY_LEGAL)
+					break;
+			}
+
+			if (moves > currentMoves)
+				continue;
+
+			// move up
+			for (int i = row - 1; i >= 0; i--) {
+				if (currBoard->at(i)[col] == currentColor) {
+					if (row - i > 1)
+					{
+						currBoard->at(row)[col] = BOARD_EMPTY_LEGAL;
+						moves++;
+						break;
+					}
+					else
+						break;
+				}
+				else if (currBoard->at(i)[col] == BOARD_EMPTY || currBoard->at(i)[col] == BOARD_EMPTY_LEGAL)
+					break;
+			}
+
+			if (moves > currentMoves)
+				continue;
+
+			// move diagonally right down
+			for (int i = col + 1, j = 1; i < BOARD_SIZE; i++, j++) {
+				if (row + j >= 0 && row + j < BOARD_SIZE && i >= 0 && i < BOARD_SIZE)
+				{
+					if (currBoard->at(row + j)[i] == currentColor) {
+						if (i - col > 1)
+						{
+							currBoard->at(row)[col] = BOARD_EMPTY_LEGAL;
+							moves++;
+							break;
+						}
+						else
+							break;
+					}
+					else if (currBoard->at(row + j)[i] == BOARD_EMPTY || currBoard->at(row + j)[i] == BOARD_EMPTY_LEGAL)
+						break;
+				}
+			}
+
+			if (moves > currentMoves)
+				continue;
+
+			// move diagonally right up
+			for (int i = col + 1, j = 1; i < BOARD_SIZE; i++, j++) {
+				if (row - j >= 0 && row - j < BOARD_SIZE && i >= 0 && i < BOARD_SIZE)
+				{
+					if (currBoard->at(row - j)[i] == currentColor) {
+						if (i - col > 1)
+						{
+							currBoard->at(row)[col] = BOARD_EMPTY_LEGAL;
+							moves++;
+							break;
+						}
+						else
+							break;
+					}
+					else if (currBoard->at(row - j)[i] == BOARD_EMPTY || currBoard->at(row - j)[i] == BOARD_EMPTY_LEGAL)
+						break;
+				}
+			}
+
+			if (moves > currentMoves)
+				continue;
+
+			// move diagonally left down
+			for (int i = col - 1, j = 1; i >= 0; i--, j++) {
+				if (row + j >= 0 && row + j < BOARD_SIZE && i >= 0 && i < BOARD_SIZE)
+				{
+					if (currBoard->at(row + j)[i] == currentColor) {
+						if (col - i > 1)
+						{
+							currBoard->at(row)[col] = BOARD_EMPTY_LEGAL;
+							moves++;
+							break;
+						}
+						else
+							break;
+					}
+					else if (currBoard->at(row + j)[i] == BOARD_EMPTY || currBoard->at(row + j)[i] == BOARD_EMPTY_LEGAL)
+						break;
+				}
+			}
+
+			if (moves > currentMoves)
+				continue;
+
+			// move diagonally left up
+			for (int i = col - 1, j = 1; i >= 0; i--, j++) {
+				if (row - j >= 0 && row - j < BOARD_SIZE && i >= 0 && i < BOARD_SIZE)
+				{
+					if (currBoard->at(row - j)[i] == currentColor) {
+						if (col - i > 1)
+						{
+							currBoard->at(row)[col] = BOARD_EMPTY_LEGAL;
+							moves++;
+							break;
+						}
+						else
+							break;
+					}
+					else if (currBoard->at(row - j)[i] == BOARD_EMPTY || currBoard->at(row - j)[i] == BOARD_EMPTY_LEGAL)
+						break;
+				}
+			}
+
+			if (moves > currentMoves)
+				continue;
+		}
+	}
+
+	return moves;
 }
 
 uint8_t GameForm::updateScore()
