@@ -688,7 +688,89 @@ std::pair<uint8_t, uint8_t> GameForm::aiThink()
 }
 
 double GameForm::minMaxAlphaBeta(std::vector<std::vector<uint8_t>> *currBoard, Player *player, bool isMax, uint8_t depth, uint8_t maxDepth, int &alpha, int &beta)
-{
+{if (depth == maxDepth)
+	{
+		return calcHeuristic(currBoard, player);
+	}
+
+	int blackCount = 0, whiteCount = 0;
+	bool end = true;
+	for (int i = 0; i < BOARD_SIZE; i++)
+	{
+		for (int j = 0; j < BOARD_SIZE; j++)
+		{
+			if (currBoard->at(i)[j] == BOARD_BLACK)
+				blackCount++;
+			else if (currBoard->at(i)[j] == BOARD_WHITE)
+				whiteCount++;
+			else if (currBoard->at(i)[j] == BOARD_EMPTY || currBoard->at(i)[j] == BOARD_EMPTY_LEGAL)
+				end = false;
+		}
+	}
+
+	if (blackCount == 0 || whiteCount == 0 || end) {
+		if ((blackCount > whiteCount && player->color == "Black") || (blackCount < whiteCount && player->color == "White")) return 100000;
+		else if ((blackCount > whiteCount && player->color == "White") || (blackCount < whiteCount && player->color == "Black")) return -100000;
+		else return 0;
+	}
+
+	std::vector<std::vector<uint8_t>> tmpBoard (*currBoard);
+
+	double best = isMax ? -100000 : 100000;
+
+	bool isEmpty = true;
+	for (int i = 0; i < BOARD_SIZE; i++)
+	{
+		for (int j = 0; j < BOARD_SIZE; j++)
+		{
+			if (tmpBoard[i][j] == BOARD_EMPTY_LEGAL)
+			{
+				placeAndFlip(&tmpBoard, player, i, j);
+
+				Player* newPlayer = player;
+				if (newPlayer == player1)
+					newPlayer = player2;
+				else
+					newPlayer = player1;
+
+				calcLegalMoves(&tmpBoard, newPlayer);
+
+				double localBest = minMaxAlphaBeta(&tmpBoard, newPlayer, !isMax, depth + 1, maxDepth, alpha, beta);
+				if (isMax)
+				{
+					if (localBest > best) best = localBest;
+					if (best > alpha) alpha = best;
+				}
+				else
+				{
+					if (localBest < best) best = localBest;
+					if (best < beta) beta = best;
+				}
+
+				tmpBoard = *currBoard;
+
+				isEmpty = false;
+
+				if (beta <= alpha)
+					break;
+			}
+		}
+	}
+
+	if (isEmpty)
+	{
+		double localBest = minMaxAlphaBeta(&tmpBoard, player, !isMax, depth + 1, maxDepth, alpha, beta);
+		if (isMax)
+		{
+			if (localBest > best) best = localBest;
+		}
+		else
+		{
+			if (localBest < best) best = localBest;
+		}
+	}
+
+	return best;
 }
 
 double GameForm::calcHeuristic(std::vector<std::vector<uint8_t>> *currBoard, Player *player)
