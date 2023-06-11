@@ -116,6 +116,25 @@ System::Void GameForm::gameOver(int win)
 
 System::Drawing::Point ^ GameForm::GetRowColIndex(TableLayoutPanel ^ tlp, System::Drawing::Point ^ point)
 {
+	if (point->X > tlp->Width || point->Y > tlp->Height)
+		return nullptr;
+
+	int w = tlp->Width;
+	int h = tlp->Height;
+	cli::array<int>^ widths = tlp->GetColumnWidths();
+
+	int i;
+	for (i = widths->Length - 1; i >= 0 && point->X < w; i--)
+		w -= widths[i];
+	int col = i + 1;
+
+	cli::array<int>^ heights = tlp->GetRowHeights();
+	for (i = heights->Length - 1; i >= 0 && point->Y < h; i--)
+		h -= heights[i];
+
+	int row = i + 1;
+
+	return gcnew System::Drawing::Point(col, row);
 }
 
 System::Void GameForm::updateBoard(Graphics ^ g)
