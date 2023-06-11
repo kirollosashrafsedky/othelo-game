@@ -139,6 +139,57 @@ System::Drawing::Point ^ GameForm::GetRowColIndex(TableLayoutPanel ^ tlp, System
 
 System::Void GameForm::updateBoard(Graphics ^ g)
 {
+	int rowCount = game_matrix->RowCount;
+	int columnCount = game_matrix->ColumnCount;
+
+	g->SmoothingMode = Drawing::Drawing2D::SmoothingMode::HighQuality;
+
+
+	for (int row = 0; row < rowCount; row++)
+	{
+		for (int column = 0; column < columnCount; column++)
+		{
+			Color color;
+			if (board->at(row)[column] == BOARD_EMPTY)
+			{
+				continue;
+			}
+			else if (board->at(row)[column] == BOARD_WHITE)
+			{
+				color = Color::FromArgb(255, 255, 255);
+			}
+			else
+			{
+				color = Color::FromArgb(40, 40, 40);
+			}
+
+			// Calculate the size of each cell
+			int cellWidth = game_matrix->Width / columnCount;
+			int cellHeight = game_matrix->Height / rowCount;
+
+			// Calculate the size of the circle based on the smaller dimension of the cell
+			int circleSize = Math::Min(cellWidth, cellHeight) - 10;
+
+			// Calculate the position of the circle to be centered in the cell
+			int circleX = column * cellWidth + (cellWidth - circleSize) / 2;
+			int circleY = row * cellHeight + (cellHeight - circleSize) / 2;
+
+			// Draw the circle
+			if (board->at(row)[column] == BOARD_EMPTY_LEGAL)
+			{
+				if (currentPlayer->type == PlayerType::HUMAN)
+				{
+					Pen^ pen = gcnew Pen(color);
+					g->DrawEllipse(pen, circleX, circleY, circleSize, circleSize);
+				}
+			}
+			else
+			{
+				SolidBrush^ brush = gcnew SolidBrush(color);
+				g->FillEllipse(brush, circleX, circleY, circleSize, circleSize);
+			}
+		}
+	}
 }
 
 System::Void GameForm::makeMove(uint8_t row, uint8_t col)
