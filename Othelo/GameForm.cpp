@@ -194,6 +194,23 @@ System::Void GameForm::updateBoard(Graphics ^ g)
 
 System::Void GameForm::makeMove(uint8_t row, uint8_t col)
 {
+	placeAndFlip(board, currentPlayer, row, col);
+
+	uint8_t wonPlayer = updateScore();
+
+	changeTurns();
+	if (calcLegalMoves(board, currentPlayer) == 0)
+	{
+		timer_start_play->Enabled = false;
+		changeTurns();
+		if (calcLegalMoves(board, currentPlayer) == 0)
+		{
+			timer_start_play->Enabled = false;
+			gameOver(wonPlayer);
+		}
+	}
+
+	game_matrix->Refresh();
 }
 
 System::Void GameForm::placeAndFlip(std::vector<std::vector<uint8_t>> *currBoard, Player *player, uint8_t row, uint8_t col)
