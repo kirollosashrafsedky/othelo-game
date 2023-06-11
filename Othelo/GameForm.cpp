@@ -81,6 +81,21 @@ System::Void GameForm::changeTurns()
 
 System::Void GameForm::gameOver(int win)
 {
+	std::string playerText;
+	if (win == 0)
+	{
+		playerText = player1->name + " (" + player1->color + ")";
+		lbl_status->Text = "Game Over - " + msclr::interop::marshal_as<System::String ^>(playerText) + " won";
+	}
+	else if (win == 1)
+	{
+		playerText = player2->name + " (" + player2->color + ")";
+		lbl_status->Text = "Game Over - " + msclr::interop::marshal_as<System::String ^>(playerText) + " won";
+	}
+	else
+	{
+		lbl_status->Text = "Game Over - Tie";
+	}
 }
 
 System::Drawing::Point ^ GameForm::GetRowColIndex(TableLayoutPanel ^ tlp, System::Drawing::Point ^ point)
