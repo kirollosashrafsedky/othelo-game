@@ -638,6 +638,53 @@ uint8_t GameForm::updateScore()
 
 std::pair<uint8_t, uint8_t> GameForm::aiThink()
 {
+	uint8_t maxDepth = 1;
+	if (gameDifficulty == GameDifficulty::MEDIUM)
+	{
+		maxDepth = 2;
+	}
+	else if (gameDifficulty == GameDifficulty::HARD)
+	{
+		maxDepth = 5;
+	}
+
+	double best = -1000000;
+	int row = 0, col = 0;
+
+	std::vector<std::vector<uint8_t>> currBoard (*board);
+	int alpha = -1000000;
+	int beta = 1000000;
+
+	for (int i = 0; i < BOARD_SIZE; i++)
+	{
+		for (int j = 0; j < BOARD_SIZE; j++)
+		{
+			if (currBoard[i][j] == BOARD_EMPTY_LEGAL)
+			{
+				placeAndFlip(&currBoard, currentPlayer, i, j);
+
+				Player* newPlayer = currentPlayer;
+				if (newPlayer == player1)
+					newPlayer = player2;
+				else
+					newPlayer = player1;
+
+				calcLegalMoves(&currBoard, newPlayer);
+
+				double localBest = minMaxAlphaBeta(&currBoard, newPlayer, false, 0, maxDepth, alpha, beta);
+
+				currBoard = *board;
+
+				if (localBest > best) {
+					best = localBest;
+					row = i;
+					col = j;
+				}
+			}
+		}
+	}
+
+	return std::pair<int, int>(row, col);
 }
 
 double GameForm::minMaxAlphaBeta(std::vector<std::vector<uint8_t>> *currBoard, Player *player, bool isMax, uint8_t depth, uint8_t maxDepth, int &alpha, int &beta)
