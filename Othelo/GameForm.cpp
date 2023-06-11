@@ -608,6 +608,32 @@ uint8_t GameForm::calcLegalMoves(std::vector<std::vector<uint8_t>>* currBoard, P
 
 uint8_t GameForm::updateScore()
 {
+	uint8_t blackCount = 0, whiteCount = 0;
+	for (int i = 0; i < BOARD_SIZE; i++)
+	{
+		for (int j = 0; j < BOARD_SIZE; j++)
+		{
+			if (board->at(i)[j] == BOARD_BLACK)
+			{
+				blackCount++;
+			}
+			else if (board->at(i)[j] == BOARD_WHITE)
+			{
+				whiteCount++;
+			}
+		}
+	}
+	player1->score = blackCount;
+	player2->score = whiteCount;
+	lbl_player_1_score->Text = gcnew System::String(player1->score.ToString());
+	lbl_player_2_score->Text = gcnew System::String(player2->score.ToString());
+
+	if (blackCount > whiteCount)
+		return 0;
+	else if (blackCount < whiteCount)
+		return 1;
+	else
+		return 2;
 }
 
 std::pair<uint8_t, uint8_t> GameForm::aiThink()
