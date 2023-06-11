@@ -77,6 +77,22 @@ System::Void GameForm::restart()
 
 System::Void GameForm::changeTurns()
 {
+	if (currentPlayer == player1)
+	{
+		currentPlayer = player2;
+	}
+	else
+	{
+		currentPlayer = player1;
+	}
+
+	std::string labelText = currentPlayer->name + "'s turn - (" + currentPlayer->color + ")";
+	lbl_status->Text = msclr::interop::marshal_as<System::String^>(labelText);
+
+	if (currentPlayer->type == PlayerType::COMPUTER)
+	{
+		timer_start_play->Enabled = true;
+	}
 }
 
 System::Void GameForm::gameOver(int win)
