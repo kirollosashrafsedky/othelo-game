@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.31729.503
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Othelo", "Othelo\Othelo.vcxproj", "{27430306-1B95-4812-8D25-70D95AF404CD}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x64 = Debug|x64
+		Debug|x86 = Debug|x86
+		Release|x64 = Release|x64
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{27430306-1B95-4812-8D25-70D95AF404CD}.Debug|x64.ActiveCfg = Debug|x64
+		{27430306-1B95-4812-8D25-70D95AF404CD}.Debug|x64.Build.0 = Debug|x64
+		{27430306-1B95-4812-8D25-70D95AF404CD}.Debug|x86.ActiveCfg = Debug|Win32
+		{27430306-1B95-4812-8D25-70D95AF404CD}.Debug|x86.Build.0 = Debug|Win32
+		{27430306-1B95-4812-8D25-70D95AF404CD}.Release|x64.ActiveCfg = Release|x64
+		{27430306-1B95-4812-8D25-70D95AF404CD}.Release|x64.Build.0 = Release|x64
+		{27430306-1B95-4812-8D25-70D95AF404CD}.Release|x86.ActiveCfg = Release|Win32
+		{27430306-1B95-4812-8D25-70D95AF404CD}.Release|x86.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {9B14327D-AD97-47E6-85B0-29850CDE051C}
+	EndGlobalSection
+EndGlobal
